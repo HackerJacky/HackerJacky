@@ -1,0 +1,27 @@
+name: Update profile art
+
+on:
+  schedule:
+    - cron: "17 6 * * *"   # 每天 UTC 06:17 (台灣時間 14:17) 自動執行
+  workflow_dispatch:        # 支援手動按鈕觸發
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  heatmap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install requests beautifulsoup4
+      - run: python scripts/fetch_contributions.py
+      - run: python scripts/render_heatmap_svg.py
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: refresh contribution graph [skip ci]"
+          file_pattern: "data/contributions.json contrib-heatmap.svg"
