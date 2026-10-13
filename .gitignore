@@ -1,3 +1,7 @@
 .venv/
 __pycache__/
 *.pyc
+
+# 照片原檔與中間產物不要公開
+source-photo.*
+source-prepped.png
